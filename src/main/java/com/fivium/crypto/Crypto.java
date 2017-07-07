@@ -24,15 +24,17 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- * Date : 27-04-2017 Created by Fivium
+ * Date : 27-04-2017 Created by Arpit Arora
  *
  */
 public class Crypto {
 	public Cipher cipher;
+	public static String userHome;
 
 	public Crypto() {
 		try {
 			cipher = Cipher.getInstance("RSA");
+			userHome = System.getProperty("user.home")+"/output.txt";
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +55,7 @@ public class Crypto {
 	public String encryptString(String msg, PublicKey key) {
 		try {
 			this.cipher.init(Cipher.ENCRYPT_MODE, key);
-			this.outputFile(new File("C:\\Arpit\\Dump\\output.txt"),
+			this.outputFile(new File(userHome),
 					Base64.encodeBase64String(cipher.doFinal(msg.getBytes("UTF-8"))));
 			return Base64.encodeBase64String(cipher.doFinal(msg.getBytes("UTF-8")));
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException
@@ -72,20 +74,21 @@ public class Crypto {
 		return fbytes;
 	}
 
-	public void decryptString(byte[] msg, PrivateKey key) {
+	public String decryptString(byte[] msg, PrivateKey key) {
+		String decryptedString = null;
 		try {
 			this.cipher.init(Cipher.DECRYPT_MODE, key);
-			System.out.println(new String(cipher.doFinal(Base64.decodeBase64(msg)), "UTF-8"));
+			 decryptedString =  new String(cipher.doFinal(Base64.decodeBase64(msg)), "UTF-8");
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException
 				| UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
+		return decryptedString;
 	}
 
 	public void outputFile(File output, String encrytedData) {
 		try (Writer writer = new BufferedWriter(
-				new OutputStreamWriter(new FileOutputStream("C:\\Arpit\\Dump\\output.txt"), "utf-8"))) {
+				new OutputStreamWriter(new FileOutputStream(userHome), "utf-8"))) {
 			writer.write(encrytedData);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -99,8 +102,8 @@ public class Crypto {
 		try {
 			privateKey = ac.getPrivate(keyGen.getaPrivateKey());
 			PublicKey publicKey = ac.getPublic(keyGen.getaPublicKey());
-			String encryptedmsg = ac.encryptString("Hello", publicKey);
-			ac.decryptString(ac.getFileInBytes(new File("C:\\Arpit\\Dump\\output.txt")), privateKey);
+			ac.encryptString("The Quick Brown Fox Jumped Over The Lazy Dog.", publicKey);
+			ac.decryptString(ac.getFileInBytes(new File(userHome)), privateKey);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

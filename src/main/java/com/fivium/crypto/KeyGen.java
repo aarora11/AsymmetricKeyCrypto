@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 
 /**
  * Date : 27-04-2017 
- * Created by Fivium
+ * Created by Arpit Arora
  *
  */
 public class KeyGen {
@@ -17,9 +17,6 @@ public class KeyGen {
 	private KeyPair aKeyPair;
 	private byte[] aPrivateKey;
 	private byte[] aPublicKey;
-	
-	
-	
 
 	public KeyGen(int length) {
 		try {
@@ -27,7 +24,6 @@ public class KeyGen {
 			this.aGenerator.initialize(length, new SecureRandom());
 			createKeys();
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
